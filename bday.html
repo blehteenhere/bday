@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Card Matching Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f4f4f9;
+    }
+
+    .game-container {
+      display: grid;
+      grid-template-columns: repeat(4, 100px);
+      grid-gap: 10px;
+    }
+
+    .card {
+      width: 100px;
+      height: 100px;
+      background-color: #2e2e2e;
+      color: white;
+      text-align: center;
+      line-height: 100px;
+      font-size: 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      position: relative;
+    }
+
+    .card .card-text {
+      visibility: hidden;
+    }
+
+    .card.flipped .card-text {
+      visibility: visible;
+    }
+
+    .hidden {
+      visibility: hidden;
+    }
+
+    .next-game {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .next-game a {
+      text-decoration: none;
+      color: #007BFF;
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="game-container" id="game-container">
+    <div class="card" data-id="1">
+      <div class="card-text">Apple</div>
+    </div>
+    <div class="card" data-id="1">
+      <div class="card-text">Apple</div>
+    </div>
+    <div class="card" data-id="2">
+      <div class="card-text">Banana</div>
+    </div>
+    <div class="card" data-id="2">
+      <div class="card-text">Banana</div>
+    </div>
+    <div class="card" data-id="3">
+      <div class="card-text">Cat</div>
+    </div>
+    <div class="card" data-id="3">
+      <div class="card-text">Cat</div>
+    </div>
+    <div class="card" data-id="4">
+      <div class="card-text">Dog</div>
+    </div>
+    <div class="card" data-id="4">
+      <div class="card-text">Dog</div>
+    </div>
+    <div class="card" data-id="5">
+      <div class="card-text">Fish</div>
+    </div>
+    <div class="card" data-id="5">
+      <div class="card-text">Fish</div>
+    </div>
+    <div class="card" data-id="6">
+      <div class="card-text">Lion</div>
+    </div>
+    <div class="card" data-id="6">
+      <div class="card-text">Lion</div>
+    </div>
+    <div class="card" data-id="7">
+      <div class="card-text">Car</div>
+    </div>
+    <div class="card" data-id="7">
+      <div class="card-text">Car</div>
+    </div>
+    <div class="card" data-id="8">
+      <div class="card-text">Bicycle</div>
+    </div>
+    <div class="card" data-id="8">
+      <div class="card-text">Bicycle</div>
+    </div>
+  </div>
+
+  <div class="next-game">
+    <a href="https://example.com/next_game" id="next-game-link" class="hidden">Go to Next Game</a>
+  </div>
+
+  <script>
+    const cards = document.querySelectorAll('.card');
+    let flippedCards = [];
+    let matchedCards = 0;
+
+    // Shuffle the cards
+    const shuffleCards = () => {
+      const shuffledArray = Array.from(cards);
+      shuffledArray.sort(() => Math.random() - 0.5);
+      shuffledArray.forEach(card => {
+        document.getElementById("game-container").appendChild(card);
+      });
+    };
+
+    // Flip card function
+    cards.forEach(card => {
+      card.addEventListener('click', flipCard);
+    });
+
+    function flipCard(event) {
+      const card = event.target;
+
+      // Don't flip the card if it's already matched or flipped
+      if (flippedCards.length === 2 || card.classList.contains('flipped')) return;
+
+      card.classList.add('flipped');
+      flippedCards.push(card);
+
+      if (flippedCards.length === 2) {
+        checkMatch();
+      }
+    }
+
+    function checkMatch() {
+      const [card1, card2] = flippedCards;
+
+      if (card1.dataset.id === card2.dataset.id) {
+        matchedCards += 2;
+        flippedCards = [];
+        if (matchedCards === cards.length) {
+          showNextGameLink();
+        }
+      } else {
+        setTimeout(() => {
+          card1.classList.remove('flipped');
+          card2.classList.remove('flipped');
+          flippedCards = [];
+        }, 1000);
+      }
+    }
+
+    function showNextGameLink() {
+      document.getElementById('next-game-link').classList.remove('hidden');
+    }
+
+    // Shuffle the cards initially when the page loads
+    shuffleCards();
+  </script>
+
+</body>
+</html>
